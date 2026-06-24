@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.sharedlives.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "refmap": "sharedlives.refmap.json",
+  "mixins": [
+    "PlayerListMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

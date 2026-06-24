@@ -27,16 +27,6 @@ Instead of each death being permanent, all players share a **pool of lives**. Ev
 
 ---
 
-## Installation
-
-1. Install [NeoForge 21.1.x](https://neoforged.net/) for Minecraft 1.21.1.
-2. Drop `sharedlives-0.1.0.jar` into your `mods/` folder.
-3. Launch the game.
-
-On the first world load, the host (or any OP on a dedicated server) will see a setup screen to configure the starting life count and enable/disable the mod.
-
----
-
 ## Configuration
 
 The mod creates a server-side config at `saves/<world>/serverconfig/sharedlives-server.toml` (singleplayer) or `world/serverconfig/sharedlives-server.toml` (dedicated server).

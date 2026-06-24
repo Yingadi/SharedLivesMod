@@ -64,7 +64,7 @@ public class SharedLivesEvents {
                             .withStyle(ChatFormatting.DARK_RED),
                     70
             );
-            broadcastSound(server, SoundEvents.WITHER_SPAWN, player.getUUID(), 1.0f, 1.0f);
+            broadcastSound(server, SoundEvents.WITHER_SPAWN, 1.0f, 1.0f);
         } else {
             broadcastTitle(server,
                     Component.literal("GAME OVER")
@@ -73,7 +73,7 @@ public class SharedLivesEvents {
                             .withStyle(ChatFormatting.RED),
                     120
             );
-            broadcastSound(server, SoundEvents.WITHER_DEATH, player.getUUID(), 1.0f, 1.0f);
+            broadcastSound(server, SoundEvents.WITHER_DEATH, 1.0f, 1.0f);
             for (ServerPlayer other : server.getPlayerList().getPlayers()) {
                 if (!other.getUUID().equals(player.getUUID())) {
                     other.setGameMode(GameType.SPECTATOR);
@@ -186,15 +186,13 @@ public class SharedLivesEvents {
         }
     }
 
-    private static void broadcastSound(MinecraftServer server, SoundEvent sound, UUID excludeUUID, float volume, float pitch) {
+    private static void broadcastSound(MinecraftServer server, SoundEvent sound, float volume, float pitch) {
         for (ServerPlayer p : server.getPlayerList().getPlayers()) {
-            if (!p.getUUID().equals(excludeUUID)) {
-                p.connection.send(new ClientboundSoundPacket(
-                        Holder.direct(sound), SoundSource.MASTER,
-                        p.getX(), p.getY(), p.getZ(),
-                        volume, pitch, 0L
-                ));
-            }
+            p.connection.send(new ClientboundSoundPacket(
+                    Holder.direct(sound), SoundSource.MASTER,
+                    p.getX(), p.getY(), p.getZ(),
+                    volume, pitch, 0L
+            ));
         }
     }
 

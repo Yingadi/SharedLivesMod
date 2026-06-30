@@ -4,14 +4,19 @@ import com.sharedlives.network.SetupPayload;
 import com.sharedlives.network.SetupResponsePayload;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.level.GameType;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
@@ -74,9 +79,10 @@ public class SharedLivesEvents {
                     120
             );
             broadcastSound(server, SoundEvents.WITHER_DEATH, 1.0f, 1.0f);
+            DamageSource gameOverSource = buildGameOverDamageSource(server);
             for (ServerPlayer other : server.getPlayerList().getPlayers()) {
-                if (!other.getUUID().equals(player.getUUID())) {
-                    other.setGameMode(GameType.SPECTATOR);
+                if (!other.getUUID().equals(player.getUUID()) && other.isAlive()) {
+                    other.hurt(gameOverSource, Float.MAX_VALUE);
                 }
             }
         }
@@ -205,6 +211,17 @@ public class SharedLivesEvents {
             player.connection.send(titlePkt);
             player.connection.send(subtitlePkt);
         }
+    }
+
+    private static DamageSource buildGameOverDamageSource(MinecraftServer server) {
+        ResourceKey<DamageType> key = ResourceKey.create(
+                Registries.DAMAGE_TYPE,
+                ResourceLocation.fromNamespaceAndPath(SharedLivesMod.MOD_ID, "game_over")
+        );
+        Holder<DamageType> holder = server.registryAccess()
+                .registryOrThrow(Registries.DAMAGE_TYPE)
+                .getHolderOrThrow(key);
+        return new DamageSource(holder);
     }
 
     public static void updateTabList(MinecraftServer server) {

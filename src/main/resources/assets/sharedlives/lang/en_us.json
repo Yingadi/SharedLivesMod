@@ -1,3 +1,4 @@
 {
-  "itemGroup.sharedlives": "Shared Lives"
+  "itemGroup.sharedlives": "Shared Lives",
+  "death.attack.sharedlives.game_over": "%1$s ran out of lives"
 }
